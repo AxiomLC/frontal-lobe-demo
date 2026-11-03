@@ -1,0 +1,23 @@
+# dependencies / runtime
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+
+# secrets + per-user connection (never commit)
+.env
+*.env
+runtime/
+data/
+
+# logs
+*.log
+runtime/logs/
+
+# working build doc (private-system references) - not for the public repo
+TECH_README.md
+
+# ide / os
+.zed/
+.DS_Store
+Thumbs.db

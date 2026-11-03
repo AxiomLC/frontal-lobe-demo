@@ -1,0 +1,584 @@
+{
+  "generated_at": "2026-11-03T16:08:24+00:00",
+  "recipe": "a3",
+  "tickers": {
+    "IONQ": {
+      "entities": [
+        {
+          "id": "ticker_parent:IONQ",
+          "name": "IONQ",
+          "label": "TICKER",
+          "props": {
+            "ticker": "IONQ",
+            "company_name": "IONQ",
+            "award_recipe_version": "a3"
+          }
+        },
+        {
+          "id": "federal_award:CONT_AWD_FA875022C1022_9700_-NONE-_-NONE-",
+          "name": "TRAPPED ION QUANTUM COMPUTER",
+          "label": "FEDERAL_AWARD",
+          "props": {
+            "ticker": "IONQ",
+            "company_name": "IONQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "kind": "contract",
+            "role": "prime",
+            "amount": 13414043.0,
+            "currency": "USD",
+            "agency_toptier": "Department of Defense",
+            "agency_subtier": "Department of the Air Force",
+            "agency_office": "FA8750  AFRL RIK",
+            "agency_abbrev": "DOD",
+            "recipient_uei": "EH32NDF7YPM7",
+            "recipient_name": "IONQ, INC.",
+            "summary": "A contract award to IONQ, INC. worth $13.4M from Department of Defense (Department of the Air Force) - 2022-09-29 to 2025-09-28. TRAPPED ION QUANTUM COMPUTER",
+            "piid": "FA875022C1022",
+            "award_type_code": "D",
+            "period_start": "2022-09-29",
+            "period_end": "2025-09-28"
+          }
+        },
+        {
+          "id": "product:trapped ion quantum computer",
+          "name": "Trapped Ion Quantum Computer",
+          "label": "PRODUCT",
+          "props": {
+            "ticker": "IONQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "summary": "Trapped Ion Quantum Computer - scope of a federal contract prime award (Department of Defense)"
+          }
+        },
+        {
+          "id": "award_inventory:IONQ",
+          "name": "IONQ - Federal Award Inventory",
+          "label": "AWARD_INVENTORY",
+          "props": {
+            "ticker": "IONQ",
+            "company_name": "IONQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "award_count": 9,
+            "sub_count": 1,
+            "summary": "9 federal awards in the inventory for IONQ - every in-window award not featured as a node, ranked by amount."
+          }
+        }
+      ],
+      "relations": [
+        {
+          "source_id": "ticker_parent:IONQ",
+          "target_id": "federal_award:CONT_AWD_FA875022C1022_9700_-NONE-_-NONE-",
+          "label": "HAS_AWARD",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award_chunk:CONT_AWD_FA875022C1022_9700_-NONE-_-NONE-",
+          "target_id": "federal_award:CONT_AWD_FA875022C1022_9700_-NONE-_-NONE-",
+          "label": "MENTIONS",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award:CONT_AWD_FA875022C1022_9700_-NONE-_-NONE-",
+          "target_id": "product:trapped ion quantum computer",
+          "label": "COVERS",
+          "props": {}
+        },
+        {
+          "source_id": "ticker_parent:IONQ",
+          "target_id": "award_inventory:IONQ",
+          "label": "HAS_AWARD_INVENTORY",
+          "props": {}
+        },
+        {
+          "source_id": "award_inventory_chunk:IONQ",
+          "target_id": "award_inventory:IONQ",
+          "label": "MENTIONS",
+          "props": {}
+        }
+      ],
+      "chunks": [
+        {
+          "id": "federal_award_chunk:CONT_AWD_FA875022C1022_9700_-NONE-_-NONE-",
+          "text": "Federal contract award - TRAPPED ION QUANTUM COMPUTER\nAward ID (PIID): FA875022C1022\nRecipient: IONQ, INC. - UEI EH32NDF7YPM7\nAmount: $13.4M (13,414,043 USD total obligation)\nAwarding agency: Department of Defense / Department of the Air Force (FA8750  AFRL RIK)\nPeriod of performance: 2022-09-29 -> 2025-09-28\nType code: D\nDescription: TRAPPED ION QUANTUM COMPUTER",
+          "props": {
+            "ticker": "IONQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3"
+          }
+        },
+        {
+          "id": "award_inventory_chunk:IONQ",
+          "text": "1. $40.9M - HHS - VISIONQUEST NATIONAL LTD - 90ZU0474\n2. $34.5M - HHS - VISIONQUEST NATIONAL LTD - 90ZU0480\n3. $30.8M - HHS - VISIONQUEST NATIONAL LTD - 90ZU0422\n4. $28.6M - HHS - VISIONQUEST NATIONAL LTD - 90ZU0611\n5. $16.8M - HHS - VISIONQUEST NATIONAL LTD - 90ZU0559\n6. $16.8M - HHS - VISIONQUEST NATIONAL LTD - 90ZU0563\n7. $9.0M - HHS - VISIONQUEST NATIONAL LTD - 90ZU0570\n8. $1.2M (sub) -  - DECISIONQ INFORMATION OPERATIONS, INCORPORATED - 5854\n9. $1.0M - HHS - VISIONQUEST BIOMEDICAL INC. - SB1DK135209",
+          "props": {
+            "ticker": "IONQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3"
+          }
+        }
+      ],
+      "stats": {
+        "records": 15,
+        "prime_raw": 14,
+        "sub_raw": 1,
+        "featured_total": 1,
+        "featured": 1,
+        "inventory": 9
+      }
+    },
+    "RGTI": {
+      "entities": [
+        {
+          "id": "ticker_parent:RGTI",
+          "name": "RGTI",
+          "label": "TICKER",
+          "props": {
+            "ticker": "RGTI",
+            "company_name": "RGTI",
+            "award_recipe_version": "a3"
+          }
+        },
+        {
+          "id": "federal_award:ASST_NON_FA95502510103_097",
+          "name": "UNDERSTANDING DEFECTS IN JOSEPHSON JUNCTIONS USING ALTERNATING-BIAS ASSISTED ANNEALING",
+          "label": "FEDERAL_AWARD",
+          "props": {
+            "ticker": "RGTI",
+            "company_name": "RGTI",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "kind": "grant",
+            "role": "prime",
+            "amount": 2029641.0,
+            "currency": "USD",
+            "agency_toptier": "Department of Defense",
+            "agency_subtier": "Department of the Air Force",
+            "agency_office": "FA9550  AFRL AFOSR",
+            "agency_abbrev": "DOD",
+            "recipient_uei": "LBJ6M5JJ7KZ5",
+            "recipient_name": "RIGETTI & CO, LLC",
+            "summary": "A grant award to RIGETTI & CO, LLC worth $2.0M from Department of Defense (Department of the Air Force) - 2025-04-01 to 2028-03-31. UNDERSTANDING DEFECTS IN JOSEPHSON JUNCTIONS USING ALTERNATING-BIAS ASSISTED ANNEALING",
+            "piid": "FA95502510103",
+            "award_type_code": "04",
+            "period_start": "2025-04-01",
+            "period_end": "2028-03-31"
+          }
+        },
+        {
+          "id": "product:understanding defects in josephson junctions using alternating bias assisted ann",
+          "name": "Understanding Defects In Josephson Junctions Using Alternating-Bias Assisted Ann",
+          "label": "PRODUCT",
+          "props": {
+            "ticker": "RGTI",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "summary": "Understanding Defects In Josephson Junctions Using Alternating-Bias Assisted Ann - scope of a federal grant prime award (Department of Defense)"
+          }
+        },
+        {
+          "id": "federal_award:CONT_AWD_FA875025CB058_9700_-NONE-_-NONE-",
+          "name": "HYBRID SUPERCONDUCTING-OPTICAL QUANTUM NETWORK NODES TO PERFORM RESEARCH TO CONNECT SUPERCONDUCTING QUBITS TO QUANTUM NE",
+          "label": "FEDERAL_AWARD",
+          "props": {
+            "ticker": "RGTI",
+            "company_name": "RGTI",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "kind": "contract",
+            "role": "prime",
+            "amount": 1300000.0,
+            "currency": "USD",
+            "agency_toptier": "Department of Defense",
+            "agency_subtier": "Department of the Air Force",
+            "agency_office": "FA8750  AFRL RIK",
+            "agency_abbrev": "DOD",
+            "recipient_uei": "LBJ6M5JJ7KZ5",
+            "recipient_name": "RIGETTI & CO, LLC",
+            "summary": "A contract award to RIGETTI & CO, LLC worth $1.3M from Department of Defense (Department of the Air Force) - 2025-08-13 to 2028-10-12. HYBRID SUPERCONDUCTING-OPTICAL QUANTUM NETWORK NODES TO PERFORM RESEARCH TO CONNECT SUPERCONDUCTING QUBITS TO QUANTUM NETWORKS.",
+            "piid": "FA875025CB058",
+            "award_type_code": "D",
+            "period_start": "2025-08-13",
+            "period_end": "2028-10-12"
+          }
+        },
+        {
+          "id": "product:hybrid superconducting optical quantum network nodes to perform research to conn",
+          "name": "Hybrid Superconducting-Optical Quantum Network Nodes To Perform Research To Conn",
+          "label": "PRODUCT",
+          "props": {
+            "ticker": "RGTI",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "summary": "Hybrid Superconducting-Optical Quantum Network Nodes To Perform Research To Conn - scope of a federal contract prime award (Department of Defense)"
+          }
+        }
+      ],
+      "relations": [
+        {
+          "source_id": "ticker_parent:RGTI",
+          "target_id": "federal_award:ASST_NON_FA95502510103_097",
+          "label": "HAS_AWARD",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award_chunk:ASST_NON_FA95502510103_097",
+          "target_id": "federal_award:ASST_NON_FA95502510103_097",
+          "label": "MENTIONS",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award:ASST_NON_FA95502510103_097",
+          "target_id": "product:understanding defects in josephson junctions using alternating bias assisted ann",
+          "label": "COVERS",
+          "props": {}
+        },
+        {
+          "source_id": "ticker_parent:RGTI",
+          "target_id": "federal_award:CONT_AWD_FA875025CB058_9700_-NONE-_-NONE-",
+          "label": "HAS_AWARD",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award_chunk:CONT_AWD_FA875025CB058_9700_-NONE-_-NONE-",
+          "target_id": "federal_award:CONT_AWD_FA875025CB058_9700_-NONE-_-NONE-",
+          "label": "MENTIONS",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award:CONT_AWD_FA875025CB058_9700_-NONE-_-NONE-",
+          "target_id": "product:hybrid superconducting optical quantum network nodes to perform research to conn",
+          "label": "COVERS",
+          "props": {}
+        }
+      ],
+      "chunks": [
+        {
+          "id": "federal_award_chunk:ASST_NON_FA95502510103_097",
+          "text": "Federal grant award - UNDERSTANDING DEFECTS IN JOSEPHSON JUNCTIONS USING ALTERNATING-BIAS ASSISTED ANNEALING\nAward ID (PIID): FA95502510103\nRecipient: RIGETTI & CO, LLC - UEI LBJ6M5JJ7KZ5\nAmount: $2.0M (2,029,641 USD total obligation)\nAwarding agency: Department of Defense / Department of the Air Force (FA9550  AFRL AFOSR)\nPeriod of performance: 2025-04-01 -> 2028-03-31\nType code: 04\nDescription: UNDERSTANDING DEFECTS IN JOSEPHSON JUNCTIONS USING ALTERNATING-BIAS ASSISTED ANNEALING",
+          "props": {
+            "ticker": "RGTI",
+            "source": "USASpending",
+            "award_recipe_version": "a3"
+          }
+        },
+        {
+          "id": "federal_award_chunk:CONT_AWD_FA875025CB058_9700_-NONE-_-NONE-",
+          "text": "Federal contract award - HYBRID SUPERCONDUCTING-OPTICAL QUANTUM NETWORK NODES TO PERFORM RESEARCH TO CONNECT SUPERCONDUCTING QUBITS TO QUANTUM NETWORKS.\nAward ID (PIID): FA875025CB058\nRecipient: RIGETTI & CO, LLC - UEI LBJ6M5JJ7KZ5\nAmount: $1.3M (1,300,000 USD total obligation)\nAwarding agency: Department of Defense / Department of the Air Force (FA8750  AFRL RIK)\nPeriod of performance: 2025-08-13 -> 2028-10-12\nType code: D\nDescription: HYBRID SUPERCONDUCTING-OPTICAL QUANTUM NETWORK NODES TO PERFORM RESEARCH TO CONNECT SUPERCONDUCTING QUBITS TO QUANTUM NETWORKS.",
+          "props": {
+            "ticker": "RGTI",
+            "source": "USASpending",
+            "award_recipe_version": "a3"
+          }
+        }
+      ],
+      "stats": {
+        "records": 7,
+        "prime_raw": 7,
+        "sub_raw": 0,
+        "featured_total": 2,
+        "featured": 2
+      }
+    },
+    "INFQ": {
+      "entities": [
+        {
+          "id": "ticker_parent:INFQ",
+          "name": "INFQ",
+          "label": "TICKER",
+          "props": {
+            "ticker": "INFQ",
+            "company_name": "INFQ",
+            "award_recipe_version": "a3"
+          }
+        },
+        {
+          "id": "federal_award:CONT_AWD_80NSSC24CA177_8000_-NONE-_-NONE-",
+          "name": "QGG APP TECHNOLOGY MATURATION AND DESIGN BASED ON AN ATOM CHIP",
+          "label": "FEDERAL_AWARD",
+          "props": {
+            "ticker": "INFQ",
+            "company_name": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "kind": "contract",
+            "role": "prime",
+            "amount": 40117904.0,
+            "currency": "USD",
+            "agency_toptier": "National Aeronautics and Space Administration",
+            "agency_subtier": "National Aeronautics and Space Administration",
+            "agency_office": "NASA SHARED SERVICES CENTER",
+            "agency_abbrev": "NASA",
+            "recipient_uei": "CRWKJZGN3D89",
+            "recipient_name": "INFLEQTION QUANTUM, LLC",
+            "summary": "A contract award to INFLEQTION QUANTUM, LLC worth $40.1M from National Aeronautics and Space Administration - 2024-07-25 to 2027-12-30. QGG APP TECHNOLOGY MATURATION AND DESIGN BASED ON AN ATOM CHIP",
+            "piid": "80NSSC24CA177",
+            "award_type_code": "D",
+            "period_start": "2024-07-25",
+            "period_end": "2027-12-30"
+          }
+        },
+        {
+          "id": "product:qgg app technology maturation and design based on an atom chip",
+          "name": "QGG App Technology Maturation And Design Based On An Atom Chip",
+          "label": "PRODUCT",
+          "props": {
+            "ticker": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "summary": "QGG App Technology Maturation And Design Based On An Atom Chip - scope of a federal contract prime award (National Aeronautics and Space Administration)"
+          }
+        },
+        {
+          "id": "federal_award:CONT_AWD_W911QX24C0024_9700_-NONE-_-NONE-",
+          "name": "RACK MOUNT OPTICAL CLOCKS SBIR PHASE III",
+          "label": "FEDERAL_AWARD",
+          "props": {
+            "ticker": "INFQ",
+            "company_name": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "kind": "contract",
+            "role": "prime",
+            "amount": 10900000.0,
+            "currency": "USD",
+            "agency_toptier": "Department of Defense",
+            "agency_subtier": "Department of the Army",
+            "agency_office": "W6QK ACC-APG ADELPHI",
+            "agency_abbrev": "DOD",
+            "recipient_uei": "CRWKJZGN3D89",
+            "recipient_name": "INFLEQTION QUANTUM, LLC",
+            "summary": "A contract award to INFLEQTION QUANTUM, LLC worth $10.9M from Department of Defense (Department of the Army) - 2024-09-27 to 2026-09-28. RACK MOUNT OPTICAL CLOCKS SBIR PHASE III",
+            "piid": "W911QX24C0024",
+            "award_type_code": "D",
+            "period_start": "2024-09-27",
+            "period_end": "2026-09-28"
+          }
+        },
+        {
+          "id": "product:rack mount optical clocks sbir phase iii",
+          "name": "Rack Mount Optical Clocks SBIR Phase III",
+          "label": "PRODUCT",
+          "props": {
+            "ticker": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "summary": "Rack Mount Optical Clocks SBIR Phase III - scope of a federal contract prime award (Department of Defense)"
+          }
+        },
+        {
+          "id": "federal_award:ASST_NON_DEAR0002072_089",
+          "name": "ENHANCING NEUTRAL-ATOM COMPUTERS FOR OPTIMIZING DELIVERY OF ENERGY (ENCODE)",
+          "label": "FEDERAL_AWARD",
+          "props": {
+            "ticker": "INFQ",
+            "company_name": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "kind": "grant",
+            "role": "prime",
+            "amount": 5265189.0,
+            "currency": "USD",
+            "agency_toptier": "Department of Energy",
+            "agency_subtier": "Department of Energy",
+            "agency_office": "ADVANCED RSRCH PROJ AGENCY ARPA-E",
+            "agency_abbrev": "DOE",
+            "recipient_uei": "CRWKJZGN3D89",
+            "recipient_name": "INFLEQTION QUANTUM, LLC",
+            "summary": "A grant award to INFLEQTION QUANTUM, LLC worth $5.3M from Department of Energy - 2026-01-09 to 2029-01-08. COLDQUANTA, INC. DBA INFLEQTION NEW AWARD CONTROL NUMBER: 3387-2557 VISION OPEN 2024 (DE-FOA-0003387) PROJECT TITLE: ENHANCING NEUTRAL-ATOM COMPUTERS FOR OPTIMIZING DELIVERY OF ENERGY (ENCODE) DESCRIPTION: \u201cTHE ENERGY GRID AND INTERMODAL EN...",
+            "piid": "DEAR0002072",
+            "award_type_code": "F002",
+            "period_start": "2026-01-09",
+            "period_end": "2029-01-08"
+          }
+        },
+        {
+          "id": "federal_award:CONT_AWD_W5170125CA055_9700_-NONE-_-NONE-",
+          "name": "SECURED ARTIFICIAL INTELLIGENCE WHICH ENHANCES SECURITY AND RESILIENCE OF ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING B",
+          "label": "FEDERAL_AWARD",
+          "props": {
+            "ticker": "INFQ",
+            "company_name": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "kind": "contract",
+            "role": "prime",
+            "amount": 1999826.09,
+            "currency": "USD",
+            "agency_toptier": "Department of Defense",
+            "agency_subtier": "Department of the Army",
+            "agency_office": "W27P USA ACQ SPT CTR",
+            "agency_abbrev": "DOD",
+            "recipient_uei": "CRWKJZGN3D89",
+            "recipient_name": "INFLEQTION QUANTUM, LLC",
+            "summary": "A contract award to INFLEQTION QUANTUM, LLC worth $2.0M from Department of Defense (Department of the Army) - 2025-04-01 to 2026-10-01. SECURED ARTIFICIAL INTELLIGENCE WHICH ENHANCES SECURITY AND RESILIENCE OF ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING BASED POSITIONING, NAVIGATION, AND TIMING SYSTEMS BY DEFENDING AGAINST ADVERSARIAL ATTACKS.",
+            "piid": "W5170125CA055",
+            "award_type_code": "D",
+            "period_start": "2025-04-01",
+            "period_end": "2026-10-01"
+          }
+        },
+        {
+          "id": "product:secured artificial intelligence which enhances security and resilience of artifi",
+          "name": "Secured Artificial Intelligence Which Enhances Security And Resilience Of Artifi",
+          "label": "PRODUCT",
+          "props": {
+            "ticker": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "summary": "Secured Artificial Intelligence Which Enhances Security And Resilience Of Artifi - scope of a federal contract prime award (Department of Defense)"
+          }
+        },
+        {
+          "id": "award_inventory:INFQ",
+          "name": "INFQ - Federal Award Inventory",
+          "label": "AWARD_INVENTORY",
+          "props": {
+            "ticker": "INFQ",
+            "company_name": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3",
+            "award_count": 9,
+            "sub_count": 5,
+            "summary": "9 federal awards in the inventory for INFQ - every in-window award not featured as a node, ranked by amount."
+          }
+        }
+      ],
+      "relations": [
+        {
+          "source_id": "ticker_parent:INFQ",
+          "target_id": "federal_award:CONT_AWD_80NSSC24CA177_8000_-NONE-_-NONE-",
+          "label": "HAS_AWARD",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award_chunk:CONT_AWD_80NSSC24CA177_8000_-NONE-_-NONE-",
+          "target_id": "federal_award:CONT_AWD_80NSSC24CA177_8000_-NONE-_-NONE-",
+          "label": "MENTIONS",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award:CONT_AWD_80NSSC24CA177_8000_-NONE-_-NONE-",
+          "target_id": "product:qgg app technology maturation and design based on an atom chip",
+          "label": "COVERS",
+          "props": {}
+        },
+        {
+          "source_id": "ticker_parent:INFQ",
+          "target_id": "federal_award:CONT_AWD_W911QX24C0024_9700_-NONE-_-NONE-",
+          "label": "HAS_AWARD",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award_chunk:CONT_AWD_W911QX24C0024_9700_-NONE-_-NONE-",
+          "target_id": "federal_award:CONT_AWD_W911QX24C0024_9700_-NONE-_-NONE-",
+          "label": "MENTIONS",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award:CONT_AWD_W911QX24C0024_9700_-NONE-_-NONE-",
+          "target_id": "product:rack mount optical clocks sbir phase iii",
+          "label": "COVERS",
+          "props": {}
+        },
+        {
+          "source_id": "ticker_parent:INFQ",
+          "target_id": "federal_award:ASST_NON_DEAR0002072_089",
+          "label": "HAS_AWARD",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award_chunk:ASST_NON_DEAR0002072_089",
+          "target_id": "federal_award:ASST_NON_DEAR0002072_089",
+          "label": "MENTIONS",
+          "props": {}
+        },
+        {
+          "source_id": "ticker_parent:INFQ",
+          "target_id": "federal_award:CONT_AWD_W5170125CA055_9700_-NONE-_-NONE-",
+          "label": "HAS_AWARD",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award_chunk:CONT_AWD_W5170125CA055_9700_-NONE-_-NONE-",
+          "target_id": "federal_award:CONT_AWD_W5170125CA055_9700_-NONE-_-NONE-",
+          "label": "MENTIONS",
+          "props": {}
+        },
+        {
+          "source_id": "federal_award:CONT_AWD_W5170125CA055_9700_-NONE-_-NONE-",
+          "target_id": "product:secured artificial intelligence which enhances security and resilience of artifi",
+          "label": "COVERS",
+          "props": {}
+        },
+        {
+          "source_id": "ticker_parent:INFQ",
+          "target_id": "award_inventory:INFQ",
+          "label": "HAS_AWARD_INVENTORY",
+          "props": {}
+        },
+        {
+          "source_id": "award_inventory_chunk:INFQ",
+          "target_id": "award_inventory:INFQ",
+          "label": "MENTIONS",
+          "props": {}
+        }
+      ],
+      "chunks": [
+        {
+          "id": "federal_award_chunk:CONT_AWD_80NSSC24CA177_8000_-NONE-_-NONE-",
+          "text": "Federal contract award - QGG APP TECHNOLOGY MATURATION AND DESIGN BASED ON AN ATOM CHIP\nAward ID (PIID): 80NSSC24CA177\nRecipient: INFLEQTION QUANTUM, LLC - UEI CRWKJZGN3D89\nAmount: $40.1M (40,117,904 USD total obligation)\nAwarding agency: National Aeronautics and Space Administration (NASA SHARED SERVICES CENTER)\nPeriod of performance: 2024-07-25 -> 2027-12-30\nType code: D\nDescription: QGG APP TECHNOLOGY MATURATION AND DESIGN BASED ON AN ATOM CHIP",
+          "props": {
+            "ticker": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3"
+          }
+        },
+        {
+          "id": "federal_award_chunk:CONT_AWD_W911QX24C0024_9700_-NONE-_-NONE-",
+          "text": "Federal contract award - RACK MOUNT OPTICAL CLOCKS SBIR PHASE III\nAward ID (PIID): W911QX24C0024\nRecipient: INFLEQTION QUANTUM, LLC - UEI CRWKJZGN3D89\nAmount: $10.9M (10,900,000 USD total obligation)\nAwarding agency: Department of Defense / Department of the Army (W6QK ACC-APG ADELPHI)\nPeriod of performance: 2024-09-27 -> 2026-09-28\nType code: D\nDescription: RACK MOUNT OPTICAL CLOCKS SBIR PHASE III",
+          "props": {
+            "ticker": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3"
+          }
+        },
+        {
+          "id": "federal_award_chunk:ASST_NON_DEAR0002072_089",
+          "text": "Federal grant award - COLDQUANTA, INC. DBA INFLEQTION NEW AWARD CONTROL NUMBER: 3387-2557 VISION OPEN 2024 (DE-FOA-0003387) PROJECT TITLE: ENHANCING NEUTRAL-ATOM COMPUTERS FOR OPTIMIZING DELIVERY OF ENERGY (ENCODE) DESCRIPTION: \u201cTHE ENERGY GRID AND INTERMODAL ENERGY SUPERHIGHWAY ARE BECOMING EVER MORE COMPLEX THANKS TO RENEWABLE ENERGY SOURCES, WHICH \u2013 UNLIKE TRADITIONAL SOURCES \u2013 ARE DECENTRALIZED AND VARIABLE, DEMANDING ADVANCED GRID MANAGEMENT SOLUTIONS TO ENSURE STABILITY, EFFICIENCY, AND SECURITY. RISING GLOBAL ENERGY DEMANDS, ESPECIALLY AS THEY ARE INCREASINGLY MET BY RENEWABLE ENERGY SOURCES, NECESSITATE EFFICIENT SOLUTIONS TO EVER MORE COMPLEX OPTIMIZATION PROBLEMS, LIKE \u201cUNIT COMMITMENT\u201d. UNIT COMMITMENT IS A MATHEMATICAL FORMULATION OF THE PROBLEM OF MAXIMIZING COST-EFFICIENCY IN COORDINATION OF GENERATOR SOURCES TO MEET FLUCTUATING ENERGY DEMANDS. IMPROVING UNIT COMMITMENT SOLVERS GENERATES TREMENDOUS ECONOMIC IMPACT IN THE ENERGY SECTOR MEASURED IN BILLIONS OF DOLLARS PER YEAR. ENCODE LEVERAGES QUANTUM COMPUTING, A NOVEL COMPUTING MODALITY THAT IS FUNDAMENTALLY MORE POWERFUL THAN TRADITIONAL \u201cCLASSICAL\u201d COMPUTING (CPU, GPU, TPU) APPROACHES IN THAT IT UNLOCKS A CLASSICALLY INACCESSIBLE CLASS OF ALGORITHMS. THE ENCODE PROGRAM AIMS THAT NOVEL COMPUTATIONAL POWER AT IMPROVING ENERGY SECTOR EFFICIENCY AND INTELLIGENT POWER UTILIZATION THROUGH THE DEVELOPMENT OF APPROPRIATE QUANTUM ALGORITHMS AND THE ADVANCEMENT OF A UNIQUELY SCALABLE QUANTUM COMPUTING TECHNOLOGY THAT USES INDIVIDUAL ATOMS AS COMPUTATIONAL QUANTUM BITS.\u201d\nAward ID (PIID): DEAR0002072\nRecipient: INFLEQTION QUANTUM, LLC - UEI CRWKJZGN3D89\nAmount: $5.3M (5,265,189 USD total obligation)\nAwarding agency: Department of Energy (ADVANCED RSRCH PROJ AGENCY ARPA-E)\nPeriod of performance: 2026-01-09 -> 2029-01-08\nType code: F002\nDescription: COLDQUANTA, INC. DBA INFLEQTION NEW AWARD CONTROL NUMBER: 3387-2557 VISION OPEN 2024 (DE-FOA-0003387) PROJECT TITLE: ENHANCING NEUTRAL-ATOM COMPUTERS FOR OPTIMIZING DELIVERY OF ENERGY (ENCODE) DESCRIPTION: \u201cTHE ENERGY GRID AND INTERMODAL ENERGY SUPERHIGHWAY ARE BECOMING EVER MORE COMPLEX THANKS TO RENEWABLE ENERGY SOURCES, WHICH \u2013 UNLIKE TRADITIONAL SOURCES \u2013 ARE DECENTRALIZED AND VARIABLE, DEMANDING ADVANCED GRID MANAGEMENT SOLUTIONS TO ENSURE STABILITY, EFFICIENCY, AND SECURITY. RISING GLOBAL ENERGY DEMANDS, ESPECIALLY AS THEY ARE INCREASINGLY MET BY RENEWABLE ENERGY SOURCES, NECESSITATE EFFICIENT SOLUTIONS TO EVER MORE COMPLEX OPTIMIZATION PROBLEMS, LIKE \u201cUNIT COMMITMENT\u201d. UNIT COMMITMENT IS A MATHEMATICAL FORMULATION OF THE PROBLEM OF MAXIMIZING COST-EFFICIENCY IN COORDINATION OF GENERATOR SOURCES TO MEET FLUCTUATING ENERGY DEMANDS. IMPROVING UNIT COMMITMENT SOLVERS GENERATES TREMENDOUS ECONOMIC IMPACT IN THE ENERGY SECTOR MEASURED IN BILLIONS OF DOLLARS PER YEAR. ENCODE LEVERAGES QUANTUM COMPUTING, A NOVEL COMPUTING MODALITY THAT IS FUNDAMENTALLY MORE POWERFUL THAN TRADITIONAL \u201cCLASSICAL\u201d COMPUTING (CPU, GPU, TPU) APPROACHES IN THAT IT UNLOCKS A CLASSICALLY INACCESSIBLE CLASS OF ALGORITHMS. THE ENCODE PROGRAM AIMS THAT NOVEL COMPUTATIONAL POWER AT IMPROVING ENERGY SECTOR EFFICIENCY AND INTELLIGENT POWER UTILIZATION THROUGH THE DEVELOPMENT OF APPROPRIATE QUANTUM ALGORITHMS AND THE ADVANCEMENT OF A UNIQUELY SCALABLE QUANTUM COMPUTING TECHNOLOGY THAT USES INDIVIDUAL ATOMS AS COMPUTATIONAL QUANTUM BITS.\u201d",
+          "props": {
+            "ticker": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3"
+          }
+        },
+        {
+          "id": "federal_award_chunk:CONT_AWD_W5170125CA055_9700_-NONE-_-NONE-",
+          "text": "Federal contract award - SECURED ARTIFICIAL INTELLIGENCE WHICH ENHANCES SECURITY AND RESILIENCE OF ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING BASED POSITIONING, NAVIGATION, AND TIMING SYSTEMS BY DEFENDING AGAINST ADVERSARIAL ATTACKS.\nAward ID (PIID): W5170125CA055\nRecipient: INFLEQTION QUANTUM, LLC - UEI CRWKJZGN3D89\nAmount: $2.0M (1,999,826 USD total obligation)\nAwarding agency: Department of Defense / Department of the Army (W27P USA ACQ SPT CTR)\nPeriod of performance: 2025-04-01 -> 2026-10-01\nType code: D\nDescription: SECURED ARTIFICIAL INTELLIGENCE WHICH ENHANCES SECURITY AND RESILIENCE OF ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING BASED POSITIONING, NAVIGATION, AND TIMING SYSTEMS BY DEFENDING AGAINST ADVERSARIAL ATTACKS.",
+          "props": {
+            "ticker": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3"
+          }
+        },
+        {
+          "id": "award_inventory_chunk:INFQ",
+          "text": "1. $1.9M - DOD - INFLEQTION QUANTUM, LLC - FA880725CB001\n2. $1.2M - NASA - INFLEQTION QUANTUM, LLC - 80NSSC23K0517\n3. $1.0M - DOD - INFLEQTION QUANTUM, LLC - N6833526C0102\n4. $825,000 - DOE - INFLEQTION QUANTUM, LLC - DESC0025493\n5. $650,000 (sub) -  - INFLEQTION QUANTUM, LLC - PNT22-24-021\n6. $549,999 (sub) -  - INFLEQTION QUANTUM, LLC - GR104125.SUB00001162\n7. $375,000 (sub) -  - INFLEQTION QUANTUM, LLC - PNT22-23-015\n8. $350,000 (sub) -  - INFLEQTION QUANTUM, LLC - AWD-002903.SUB00000779\n9. $145,804 (sub) -  - INFLEQTION QUANTUM, LLC - 1128986",
+          "props": {
+            "ticker": "INFQ",
+            "source": "USASpending",
+            "award_recipe_version": "a3"
+          }
+        }
+      ],
+      "stats": {
+        "records": 39,
+        "prime_raw": 31,
+        "sub_raw": 8,
+        "featured_total": 4,
+        "featured": 4,
+        "inventory": 9
+      }
+    }
+  }
+}
