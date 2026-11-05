@@ -233,6 +233,7 @@ function openLogStream() {
   const es = new EventSource('/api/logs');
   es.onmessage = (e) => { try { logLine(JSON.parse(e.data)); } catch(_){} };
   es.onerror = () => { /* sse reconnect handled by browser */ }
+}
 
 // ── counts (usage meter) ──────────────────────────────────
 function meter(label, val, limit) {

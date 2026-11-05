@@ -1,6 +1,6 @@
 # ===============  db.py — Neo4j driver for the demo app  ===============
 # The demo connects to YOUR Neo4j (AuraDB Free or a local install). Details
-# are saved locally in data/connection.json (git-ignored) — the SAME shape the
+# are saved locally in runtime/connection.json (git-ignored) — the SAME shape the
 # full Frontal Lobe app keeps in its .env, but stored per-user here so this
 # demo can point at its OWN database without touching anything else.
 # The password is never logged and is masked in every API response.
@@ -10,7 +10,7 @@ from pathlib import Path
 
 from neo4j import GraphDatabase
 
-_DB_FILE = Path(__file__).resolve().parent.parent / "data" / "connection.json"
+_DB_FILE = Path(__file__).resolve().parent.parent.parent / "runtime" / "connection.json"
 
 _driver = None
 _driver_lock = threading.Lock()
@@ -79,7 +79,7 @@ def get_driver():
 
 def save_connection(uri: str, username: str, password: str) -> None:
     """Persist the connection locally and rebuild the driver. Never logs the
-    password — the only place it is written is data/connection.json."""
+    password — the only place it is written is runtime/connection.json."""
     _data_dir().mkdir(parents=True, exist_ok=True)
     _DB_FILE.write_text(
         json.dumps({"uri": uri, "username": username, "password": password}, indent=2),

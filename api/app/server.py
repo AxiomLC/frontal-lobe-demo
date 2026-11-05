@@ -32,8 +32,8 @@ from .award_config import (
     SUBAWARD_MIN_AMOUNT,
 )
 
-ROOT = Path(__file__).resolve().parent.parent          # repo root
-STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
+ROOT = Path(__file__).resolve().parent.parent.parent   # repo root
+STATIC_DIR = ROOT / "api" / "static"
 
 app = FastAPI(title="Frontal Lobe - demo", version=AWARD_RECIPE_VERSION)
 
