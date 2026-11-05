@@ -157,7 +157,7 @@ The full system is the worth-seeing one. I'm happy to:
   the graph.
 - **Share the source under NDA** for a technical review.
 
-Contact: **[your contact link / email]** · **https://w57th.agency**
+Contact: **dev@w57th.agency**
 
 ---
 
