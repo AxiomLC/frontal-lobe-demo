@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Frontal Lobe - demo (USASpending)</title>
+<style>
+  :root {
+    --bg: #0d1117; --bg2: #161b22; --bg3: #1c2330;
+    --line: #2d3748; --text: #e6edf3; --muted: #8b98a5;
+    --accent: #58a6ff; --gold: #ffb86b; --green: #3fb950; --red: #f85149;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--bg); color: var(--text); font: 14px/1.45 "Segoe UI", system-ui, sans-serif; }
+  a { color: var(--accent); }
+  .flex { display: flex; }
+  .col { display: flex; flex-direction: column; }
+
+  /* top status bar */
+  header { display: flex; align-items: center; gap: 16px; padding: 8px 14px;
+           background: var(--bg2); border-bottom: 1px solid var(--line); }
+  header .title { font-weight: 700; letter-spacing: .3px; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  .pill { padding: 3px 10px; border-radius: 12px; font-size: 12px; border: 1px solid var(--line); }
+  .pill.ok { color: var(--green); border-color: var(--green); }
+  .pill.no { color: var(--red); border-color: var(--red); }
+  .spacer { flex: 1; }
+
+  /* layout */
+  .layout { display: grid; grid-template-columns: 310px 1fr; height: calc(100vh - 46px); }
+  .sidebar { border-right: 1px solid var(--line); background: var(--bg2); padding: 12px; gap: 14px; overflow-y: auto; }
+  .main { display: flex; flex-direction: column; overflow: hidden; }
+  .panel { background: var(--bg3); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+  .panel h3 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+
+  label { display: block; font-size: 12px; color: var(--muted); margin: 6px 0 2px; }
+  input, textarea { width: 100%; background: var(--bg); color: var(--text);
+      border: 1px solid var(--line); border-radius: 5px; padding: 7px 8px; font-size: 13px; }
+  input:focus, textarea:focus { outline: none; border-color: var(--accent); }
+  button { background: var(--accent); color: #04101f; border: none; border-radius: 5px;
+      padding: 8px 12px; font-weight: 600; cursor: pointer; font-size: 13px; }
+  button:hover { filter: brightness(1.08); }
+  button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); font-weight: 500; }
+  button[disabled] { opacity: .45; cursor: not-allowed; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .hint { font-size: 11px; color: var(--muted); }
+  .err { color: var(--red); font-size: 12px; margin-top: 6px; white-space: pre-wrap; }
+  .ok-msg { color: var(--green); font-size: 12px; margin-top: 6px; }
+
+  /* graph + viewer */
+  .graph-wrap { position: relative; flex: 1; min-height: 300px; }
+  canvas { width: 100%; height: 100%; display: block; background: radial-gradient(ellipse at 30% 30%, #141c29, #0b0f16); }
+  .overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+             color: var(--muted); pointer-events: none; font-size: 13px; }
+  .viewer { position: absolute; top: 10px; right: 10px; bottom: 10px; width: 380px; background: var(--bg2);
+            border: 1px solid var(--line); border-radius: 8px; overflow-y: auto; padding: 14px; box-shadow: 0 8px 30px rgba(0,0,0,.5); display: none; }
+  .viewer h2 { margin: 0 0 4px; font-size: 16px; }
+  .viewer .tag { display: inline-block; font-size: 11px; color: var(--gold); border: 1px solid var(--gold); border-radius: 10px; padding: 1px 8px; }
+  .viewer .meta { margin: 8px 0; font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
+  .viewer .chunk { font-family: ui-monospace, monospace; font-size: 12px; white-space: pre-wrap;
+                   background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px; }
+  .viewer .close { float: right; cursor: pointer; color: var(--muted); }
+
+  /* tabs + sections below graph */
+  .tabs { display: flex; gap: 4px; padding: 6px 10px 0; background: var(--bg2); border-bottom: 1px solid var(--line); }
+  .tabs button { background: transparent; color: var(--muted); border: none; border-bottom: 2px solid transparent; border-radius: 0; padding: 8px 12px; }
+  .tabs button.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tabbody { flex: 0 0 auto; height: 235px; overflow-y: auto; padding: 10px; font-size: 12px; background: var(--bg); }
+  #log { font-family: ui-monospace, monospace; }
+  #log .info { color: var(--accent); } #log .ok { color: var(--green); }
+  #log .warn { color: var(--gold); } #log .error { color: var(--red); }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: 3px 8px; border-bottom: 1px solid var(--line); font-size: 12px; }
+  th { color: var(--muted); }
+  .meter { background: var(--bg); border-radius: 4px; height: 8px; overflow: hidden; margin-top: 2px; }
+  .meter > div { background: var(--accent); height: 100%; }
+</style>
+</head>
+<body>
+<header>
+  <span class="title">Frontal Lobe</span><span class="sub">demo · USASpending</span>
+  <span id="pillConn" class="pill no">not connected</span>
+  <span id="pillRecipe" class="pill">recipe —</span>
+  <span class="spacer"></span>
+  <button class="ghost" id="btnConsole" type="button">Open Neo4j Console</button>
+  <button class="ghost" id="btnKeep" type="button">Keep alive</button>
+</header>
+<div class="layout">
+  <aside class="sidebar col">
+    <div class="panel">
+      <h3>Connect to Neo4j</h3>
+      <label>Connection URI</label>
+      <input id="connUri" placeholder="neo4j+s://xxxx.databases.neo4j.io" />
+      <label>Username</label>
+      <input id="connUser" placeholder="neo4j" />
+      <label>Password</label>
+      <input id="connPass" type="password" placeholder="••••••••" />
+      <div class="row" style="margin-top:10px">
+        <button id="btnTest" type="button">Test connection</button>
+        <button class="ghost" id="btnSave" type="button">Save</button>
+      </div>
+      <div id="connMsg"></div>
+      <div class="hint" style="margin-top:6px">Details are saved locally and git-ignored.</div>
+    </div>
+
+    <div class="panel">
+      <h3>Ingest (USASpending)</h3>
+      <label>Tickers (comma-separated)</label>
+      <input id="tickers" value="IONQ, RGTI, INFQ" />
+      <div class="row" style="margin-top:10px">
+        <button id="btnIngest" type="button">Ingest</button>
+        <button class="ghost" id="btnDryRun" type="button">Dry run</button>
+      </div>
+      <div id="ingestMsg"></div>
+      <div class="hint" style="margin-top:6px">Deterministic · keyless · idempotent (recipe-stamped).</div>
+    </div>
+
+    <div class="panel">
+      <h3>Usage vs AuraDB Free limits</h3>
+      <div id="counts"><div class="hint">Connect + ingest to see counts.</div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="graph-wrap" id="graphWrap">
+      <canvas id="cv"></canvas>
+      <div class="overlay" id="graphOverlay">Connect, then ingest tickers to grow the graph.</div>
+      <div class="viewer" id="viewer"></div>
+    </div>
+    <div class="tabs">
+      <button class="active" data-tab="log">Log</button>
+      <button data-tab="cypher">Cypher</button>
+      <button data-tab="kb">KB</button>
+    </div>
+    <div class="tabbody">
+      <div id="tab-log"><pre id="log" style="margin:0"></pre></div>
+      <div id="tab-cypher" style="display:none">
+        <div class="row">
+          <input id="cypherInput" placeholder="MATCH (t:TICKER {ticker:'IONQ'})-[:HAS_AWARD]->(a) RETURN a.name, a.amount ORDER BY a.amount DESC" />
+          <button id="btnCypher" type="button">Run</button>
+        </div>
+        <div class="row" style="margin-top:6px">
+          <button class="ghost" data-ex="0" type="button">Top awards</button>
+          <button class="ghost" data-ex="1" type="button">Products</button>
+          <button class="ghost" data-ex="2" type="button">Prime contractor</button>
+          <button class="ghost" data-ex="3" type="button">Whole graph</button>
+        </div>
+        <div id="cypherOut" styl
+        </div>
+        <div id="cypherOut" style="margin-top:8px"></div>
+      </div>
+      <div id="tab-kb" style="display:none"><div id="kbOut"></div></div>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const API = {
+  get: async (p) => { const r = await fetch(p); return r.ok ? r.json() : Promise.reject(new Error((await r.json().catch(()=>({}))).detail || ('HTTP ' + r.status))); },
+  post: async (p, body) => { const r = await fetch(p, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body||{}) }); return r.ok ? r.json() : Promise.reject(new Error((await r.json().catch(()=>({}))).detail || ('HTTP ' + r.status))); },
+};
+const EXAMPLES = [
+  "MATCH (t:TICKER {ticker:'IONQ'})-[:HAS_AWARD]->(a:FEDERAL_AWARD) RETURN a.name, a.role, a.kind, a.amount, a.agency_toptier ORDER BY a.amount DESC",
+  "MATCH (t:TICKER)-[:HAS_AWARD]->(a:FEDERAL_AWARD)-[:COVERS]->(p:PRODUCT) RETURN t.ticker, p.name, a.amount ORDER BY a.amount DESC LIMIT 25",
+  "MATCH (t:TICKER {ticker:'INFQ'})-[:HAS_AWARD]->(a:FEDERAL_AWARD {role:'subcontract'})-[:AWARDED_BY]->(prime:COMPANY) RETURN prime.name, count(a) AS awards, sum(a.amount) AS total ORDER BY total DESC",
+  "MATCH (n) WHERE NOT n:Chunk AND NOT n:_Heartbeat OPTIONAL MATCH (n)-[r]->(m) WHERE NOT m:Chunk AND NOT m:_Heartbeat RETURN n, r, m",
+];
+
+async function refreshStatus() {
+  try {
+    const s = await API.get('/api/status');
+    const pill = $('pillConn');
+    pill.textContent = s.connected ? ('connected' + (s.uri ? ' · '+s.uri : '')) : 'not connected';
+    pill.className = 'pill ' + (s.connected ? 'ok' : 'no');
+    $('pillRecipe').textContent = 'recipe ' + s.recipe;
+  } catch (e) { $('pillConn').textContent = 'api unreachable'; }
+}
+
+// ── connect ────────────────────────────────────────────────
+function connMsg(m, ok) { const el=$('connMsg'); el.className = ok?'ok-msg':'err'; el.textContent = m; }
+$('btnTest').onclick = async () => {
+  connMsg('Testing…');
+  try {
+    const r = await API.post('/api/connect/test', { uri:$('connUri').value.trim(), username:$('connUser').value.trim(), password:$('connPass').value });
+    connMsg(r.message || (r.ok?'Connected':'Failed'), r.ok);
+  } catch (e) { connMsg(e.message, false); }
+};
+$('btnSave').onclick = async () => {
+  try {
+    await API.post('/api/connect/save', { uri:$('connUri').value.trim(), username:$('connUser').value.trim(), password:$('connPass').value });
+    connMsg('Saved.', true); refreshStatus(); refreshCounts(); loadGraph();
+  } catch (e) { connMsg(e.message, false); }
+};
+
+// ── ingest ─────────────────────────────────────────────────
+function ingestMsg(m, ok) { const el=$('ingestMsg'); el.className = ok?'ok-msg':'err'; el.textContent = m; }
+async function runIngest(dry) {
+  const tickers = $('tickers').value.split(',').map(t=>t.trim().toUpperCase()).filter(Boolean);
+  if (!tickers.length) return ingestMsg('Enter at least one ticker.', false);
+  ingestMsg(dry ? 'Dry run: fetching + planning only (nothing written)…' : 'Ingest started… see Log.');
+  try {
+    const r = await API.post('/api/ingest', { tickers, dry_run: !!dry });
+    if (dry) ingestMsg('Dry run planned tickers: ' + (r.planned||[]).join(', '), true);
+    else ingestMsg('Job ' + r.job_id + ' running — follow the Log.', true);
+  } catch (e) { ingestMsg(e.message, false); }
+}
+$('btnIngest').onclick = () => runIngest(false);
+$('btnDryRun').onclick = () => runIngest(true);
+
+// ── keepalive + console ────────────────────────────────────
+$('btnKeep').onclick = async () => {
+  try { const r = await API.post('/api/keepalive'); $('btnKeep').textContent='Kept alive ✓'; setTimeout(()=>$('btnKeep').textContent='Keep alive', 1500); }
+  catch (e) { alert('Keepalive failed: ' + e.message); }
+};
+$('btnConsole').onclick = () => window.open('https://console.neo4j.io', '_blank');
+
+// ── live log (SSE) ─────────────────────────────────────────
+function logLine(ev) {
+  const pre = $('log');
+  const level = (ev.level || 'info').toLowerCase();
+  const cls = level === 'ok' ? 'ok' : level === 'warn' ? 'warn' : level === 'error' ? 'error' : 'info';
+  const t = (ev.ts||'').slice(11,19);
+  const div = document.createElement('div');
+  div.className = 'info '+cls;
+  div.textContent = '[' + (level) + ' ' + t + '] ' + (ev.message||'');
+  pre.appendChild(div);
+  while (pre.children.length > 500) pre.removeChild(pre.firstChild);
+  pre.scrollTop = pre.scrollHeight;
+}
+function openLogStream() {
+  const es = new EventSource('/api/logs');
+  es.onmessage = (e) => { try { logLine(JSON.parse(e.data)); } catch(_){} };
+  es.onerror = () => { /* sse reconnect handled by browser */ }
+
+// ── counts (usage meter) ──────────────────────────────────
+function meter(label, val, limit) {
+  const pct = Math.min(100, Math.round(100 * val / limit));
+  return '<div style="margin-top:6px"><div class="row"><span style="min-width:115px">'+label+'</span>'+
+    '<b style="margin-left:auto">'+Number(val||0).toLocaleString()+'</b><span class="hint"> / '+Number(limit).toLocaleString()+'</span></div>'+
+    '<div class="meter"><div style="width:'+pct+'%"></div></div></div>';
+}
+async function refreshCounts() {
+  try {
+    const c = await API.get('/api/counts');
+    const nl = c.node_labels||{}, rl = c.rel_labels||{};
+    let h = meter('Nodes', c.nodes_total, 200000) + meter('Relationships', c.rels_total, 400000);
+    const labels = Object.entries(nl).filter(([k])=>!k.startsWith('_')&&k!=='NODE').sort((a,b)=>b[1]-a[1]);
+    h += '<div class="hint" style="margin-top:8px">by label: ' + (labels.map(x=>x[0]+' '+x[1]).join(' \u00b7 ')||'(empty)') + '</div>';
+    const rels = Object.entries(rl).filter(([k])=>!k.startsWith('_')).sort((a,b)=>b[1]-a[1]);
+    h += '<div class="hint">by rel: ' + (rels.map(x=>x[0]+' '+x[1]).join(' \u00b7 ')||'(empty)') + '</div>';
+    $('counts').innerHTML = h;
+  } catch (e) { $('counts').innerHTML = '<div class="hint">'+e.message+'</div>'; }
+}
+
+// ── tabs ──────────────────────────────────────────────────
+document.querySelectorAll('.tabs button').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    ['log','cypher','kb'].forEach(t => { $('tab-'+t).style.display = (t===btn.dataset.tab) ? '' : 'none'; });
+    if (btn.dataset.tab === 'kb') refreshKb();
+  };
+});
+
+// ── KB (USASpending only) ─────────────────────────────────
+async function refreshKb() {
+  try {
+    const k = await API.get('/api/kb');
+    const totals = Object.entries(k.totals||{}).filter(([x])=>!x.startsWith('_')&&x!=='NODE').sort((a,b)=>b[1]-a[1]);
+    const per = Object.entries(k.per_ticker||{}).sort((a,b)=>(b[1].top_amount||0)-(a[1].top_amount||0));
+    let h = '<div>Node totals: ' + (totals.map(x=>x[0]+' '+x[1]).join(' \u00b7 ')||'empty') + '</div>';
+    h += '<table style="margin-top:8px"><tr><th>Ticker</th><th>Awards</th><th>Products</th><th>Top award</th><th>Inventory</th></tr>';
+    for (const [tk,d] of per) h += '<tr><td><b>'+tk+'</b></td><td>'+(d.awards||0)+'</td><td>'+(d.products||0)+'</td><td>$'+Number(d.top_amount||0).toLocaleString()+'</td><td>'+(d.inventory_count||0)+'</td></tr>';
+    $('kbOut').innerHTML = h + '</table>';
+  } catch (e) { $('kbOut').innerHTML = '<div class="hint">'+e.message+'</div>'; }
+}
+
+// ── Cypher ─────────────────────────────────────────────────
+function esc(v) { return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function cellV(v) {
+  if (v === null || v === undefined) return '';
+  if (typeof v === 'object') { try { return JSON.stringify(v).slice(0,120); } catch(e){ return ''; } }
+  return String(v);
+}
+function cypherTable(keys, rows) {
+  if (!rows || !rows.length) return '<div class="hint">No rows.</div>';
+  let h = '<table><tr>' + keys.map(k=>'<th>'+esc(k)+'</th>').join('') + '</tr>';
+  outer:
+  for (const r of rows) {
+    let cells = '';
+    for (const k of keys) { const v = cellV(r[k]); if (typeof r[k] === 'object' && r[k] && r[k].length === undefined && Object.keys(r[k]).length > 0) continue outer; cells += '<td>'+esc(v)+'</td>'; }
+    h += '<tr>'+cells+'</tr>';
+  }
+  return h + '</table>';
+}
+async function runCypher() {
+  const q = $('cypherInput').value.trim();
+  if (!q) return;
+  try {
+    const r = await API.post('/api/cypher', { query: q, limit: 200 });
+    const n = (r.meta ? r.meta.count : r.rows.length);
+    $('cypherOut').innerHTML = '<div class="hint">'+n+' row(s)</div>' + cypherTable(r.keys, r.rows);
+  } catch (e) { $('cypherOut').innerHTML = '<div class="err">'+esc(e.message)+'</div>'; }
+}
+$('btnCypher').onclick = runCypher;
+document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => { $('cypherInput').value = EXAMPLES[+b.dataset.ex]; runCypher(); });
+
+// ── 2D force graph (hand-rolled canvas, no deps) ──────────
+const cv = $('cv'), ctx = cv.getContext('2d');
+let graph = { nodes:[], links:[] }, sim = [], hover = null, sel = null, dragging = false;
+const COLORS = { TICKER:'#ffd166', FEDERAL_AWARD:'#58a6ff', PRODUCT:'#3fb950', COMPANY:'#f47067',
+                 AWARD_INVENTORY:'#a371f7', SUBSIDIARY:'#79c0ff', DEFAULT:'#8b98a5' };
+let linkMap = {};
+
+function resize() { const r = cv.parentElement.getBoundingClientRect(); cv.width = r.width; cv.height = r.height; }
+window.addEventListener('resize', resize); resize();
+
+function typeOf(node) { return node.type || 'DEFAULT'; }
+function colorOf(t) { return COLORS[t] || COLORS.DEFAULT; }
+
+function initSim() {
+  const W = cv.width, H = cv.height;
+  sim = graph.nodes.map((n,i) => {
+    const a = (i / Math.max(1, graph.nodes.length)) * Math.PI * 2;
+    return { x: W/2 + Math.cos(a)*120, y: H/2 + Math.sin(a)*120, vx:0, vy:0, node: n };
+  });
+  linkMap = {};
+  const idx = {}; sim.forEach((p,i)=>idx[p.node.id]=i);
+  for (const l of graph.links) {
+    if (idx[l.source] === undefined || idx[l.target] === undefined) continue;
+    linkMap[l.source + '\u0000' + l.target] = { s: idx[l.source], t: idx[l.target] };
+  }
+}
+
+function simulate() {
+  const W = cv.width, H = cv.height, K = 2.2, C = 2200;
+  for (let it=0; it<50; it++) {
+    for (let i=0;i<sim.length;i++) for (let j=i+1;j<sim.length;j++) {
+      const a=sim[i], b=sim[j]; let dx=b.x-a.x, dy=b.y-a.y;
+      let d2 = dx*dx+dy*dy; if (d2<1) { dx=(Math.random()-.5); dy=(Math.random()-.5); d2=1; }
+      const f = C/d2; const d=Math.sqrt(d2);
+      a.vx -= dx/d*f; a.vy -= dy/d*f; b.vx += dx/d*f; b.vy += dy/d*f;
+    }
+    for (const key in linkMap) {
+      const l=linkMap[key], a=sim[l.s], b=sim[l.t];
+      let dx=b.x-a.x, dy=b.y-a.y; const d=Math.max(1, Math.hypot(dx,dy));
+      const f=(d-K)*0.02; dx/=d; dy/=d;
+      a.vx += dx*f; a.vy += dy*f; b.vx -= dx*f; b.vy -= dy*f;
+    }
+    for (const p of sim) { p.vx *= 0.85; p.vy *= 0.85; p.x += p.vx*0.06; p.y += p.vy*0.06; }
+  }
+}
+
+function draw() {
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 1;
+  for (const key in linkMap) {
+    const l=linkMap[key], a=sim[l.s], b=sim[l.t];
+    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+  }
+  for (let i=0;i<sim.length;i++) {
+    const p=sim[i]; const t=typeOf(p.node); const c=colorOf(t);
+    const r = (p.node===sel || p.node===hover) ? 9 : 7;
+    ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2);
+    ctx.fillStyle = c; ctx.fill();
+    ctx.fillStyle = '#0d1117'; ctx.beginPath(); ctx.arc(p.x,p.y,r-3.5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = c; ctx.font = 'bold 10px sans-serif'; ctx.textAlign='center';
+    ctx.fillText((p.node.name||'').slice(0,16), p.x, p.y - r - 4);
+  }
+}
+
+async function loadGraph() {
+  try {
+    graph = await API.get('/api/graph');
+    $('graphOverlay').textContent = graph.nodes.length ? '' : 'No data yet - ingest tickers.';
+    resize(); initSim(); simulate(); draw();
+  } catch (e) { $('graphOverlay').textContent = e.message; }
+}
+
+// ── interaction: hover + click -> viewer ──────────────────
+function pickAt(px, py) {
+  for (let i=sim.length-1;i>=0;i--) { const p=sim[i]; if (Math.hypot(p.x-px,p.y-py)<=11) return p.node; }
+  return null;
+}
+cv.addEventListener('mousemove', (e)=>{ const r=cv.getBoundingClientRect(); const n=pickAt(e.clientX-r.left, e.clientY-r.top); hover=n; cv.style.cursor=n?'pointer':'default'; draw(); });
+cv.addEventListener('click', (e)=>{ const r=cv.getBoundingClientRect(); const n=pickAt(e.clientX-r.left, e.clientY-r.top); if (n) openViewer(n.id); });
+
+// ── Viewer: metadata + the whole source chunk ─────────────
+async function openViewer(id) {
+  const v = $('viewer');
+  v.style.display = 'block';
+  v.innerHTML = '<span class="close" id="vClose">\u2715</span><div id="vBody">loading…</div>';
+  $('vClose').onclick = () => { v.style.display='none'; sel=null; draw(); };
+  try {
+    const n = await API.get('/api/node/' + encodeURIComponent(id));
+    const p = n.props || {};
+    const fmt$ = (x) => '$' + Number(x||0).toLocaleString();
+    let meta = '<div class="tag">'+esc(n.type)+'</div>';
+    meta += '<h2>' + esc(n.name) + '</h2>';
+    meta += '<div class="meta">';
+    if (p.ticker) meta += '<div>Company: <b>'+esc(p.ticker)+'</b></div>';
+    if (p.role) meta += '<div>Role: <b>'+esc(p.role)+'</b> · Kind: <b>'+esc(p.kind||'')+'</b></div>';
+    if (p.amount) meta += '<div>Amount: <b>'+fmt$(p.amount)+'</b></div>';
+    if (p.agency_toptier) meta += '<div>Agency: <b>'+esc(p.agency_toptier)+'</b>'+(p.agency_subtier?' <span class="hint">/ '+esc(p.agency_subtier)+'</span>':'')+'</div>';
+    if (p.recipient_name) meta += '<div>Recipient: '+esc(p.recipient_name)+'</div>';
+    if (p.piid) meta += '<div>Award ID: '+esc(p.piid)+'</div>';
+    if (p.period_start) meta += '<div>Period: '+esc(p.period_start)+' \u2192 '+(p.period_end||'open')+'</div>';
+    if (p.prime_recipient) meta += '<div>Prime: '+esc(p.prime_recipient)+'</div>';
+    if (p.sub_award_id) meta += '<div>Sub-Award: '+esc(p.sub_award_id)+'</div>';
+    if (n.summary) meta += '<div style="margin-top:6px">'+esc(n.summary)+'</div>';
+    meta += '</div>';
+    const chunks = (n.chunks && n.chunks.length) ? '<div class="chunk">'+esc(n.chunks.join('\n\n'))+'</div>' : '<div class="hint">(no source chunk)</div>';
+    $('vBody').innerHTML = meta + chunks;
+  } catch (e) { $('vBody').innerHTML = '<div class="err">'+esc(e.message)+'</div>'; }
+}
+
+// ── boot / auto-refresh ───────────────────────────────────
+openLogStream();
+refreshStatus();
+refreshCounts();
+loadGraph();
+setInterval(() => { refreshStatus(); refreshCounts(); }, 15000);
+setInterval(loadGraph, 20000);
+</script>
+</body>
+</html>
