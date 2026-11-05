@@ -1,25 +1,18 @@
-# Frontal Lobe — demo (who the U.S. government pays, as a knowledge graph)
+# Frontal Lobe - demo (who the U.S. government pays, as a knowledge graph)
 
-> **This is the public demo slice of a larger private system.** It ships **one
-> complete "evidence leg"** — federal awards from USASpending.gov — folded into a
-> small Neo4j knowledge graph, with a local control panel that includes a simple
-> **2D graph map**. The full private Frontal Lobe (SEC contracts + USPTO patents
-> + this federal-awards leg + a research agent + a 3D UI) is available as a live
-> walkthrough and under NDA. See [Request the full demo](#request-the-full-demo).
+![Frontal Lobe demo](screenshot.png)
 
-Frontal Lobe is a GraphRAG system that reads the actual paperwork behind
-hard-tech companies and turns it into a navigable knowledge graph. Every company
-sits on one spine, explained by independent "evidence legs":
-
-| Leg | Question it answers | Source | In this repo? |
-|---|---|---|---|
-| **USASpending** | *Who pays them?* | Federal contract, grant & subaward records | **Yes — full leg** |
-| **SEC** | *Who do they deal with?* | Material contracts, clauses, subsidiaries (EDGAR) | Private |
-| **USPTO** | *What do they own?* | Patents, inventors, technology classes | Private |
-
-The USASpending leg is **fully deterministic — no LLM anywhere in fetch, rank,
-or build** — and the API is **keyless**, so this slice runs with nothing but a
-Neo4j connection.
+> **This is a DEMO LEG** of the full **Frontal Lobe** app - a GraphRAG system
+> that reads the real paperwork (SEC contracts, USPTO patents, and federal
+> awards from USASpending.gov) behind hard-tech companies and turns it into a
+> navigable knowledge graph.
+>
+> The **full Frontal Lobe** app is **private at this time**. See it in action:
+> **https://youtube.com/shorts/1lC-xFJX5AM** (or [Request the full demo](#request-the-full-demo) for a live walkthrough / source under NDA).
+>
+> This public repo ships **one complete "evidence leg"** - federal awards from
+> USASpending.gov - folded into a small Neo4j knowledge graph, with a local
+> control panel that includes a simple 2D graph map.
 
 ---
 
