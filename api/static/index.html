@@ -52,6 +52,8 @@
   .graph-wrap { position: relative; flex: 1; min-height: 300px; }
   #graph { position: absolute; inset: 0; }
   #graph canvas { width: 100%; height: 100%; display: block; background: radial-gradient(ellipse at 30% 30%, #141c29, #0b0f16); }
+  #graphCy { position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 30%, #141c29, #0b0f16); }
+  #graphCy canvas { width: 100%; height: 100%; display: block; }
   .overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
              color: var(--muted); pointer-events: none; font-size: 13px; }
   .viewer { position: absolute; top: 10px; right: 10px; bottom: 10px; width: 380px; z-index: 5; background: var(--bg2);
@@ -86,6 +88,7 @@
   <span id="pillConn" class="pill no">not connected</span>
   <span id="pillRecipe" class="pill">recipe —</span>
   <span class="spacer"></span>
+  <button class="ghost" id="btnRender" type="button" title="Switch the 2D map renderer">View: Force</button>
   <button class="ghost" id="btnConsole" type="button">Open Neo4j Console</button>
   <button class="ghost" id="btnKeep" type="button">Keep alive</button>
 </header>
@@ -128,6 +131,7 @@
   <div class="main">
     <div class="graph-wrap" id="graphWrap">
       <div id="graph"></div>
+      <div id="graphCy" style="display:none"></div>
       <div class="overlay" id="graphOverlay">Connect, then ingest tickers to grow the graph.</div>
     </div>
     <div class="tabs">
@@ -159,6 +163,7 @@
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/force-graph@1/dist/force-graph.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3/dist/cytoscape.min.js"></script>
 <script>
 "use strict";
 
@@ -195,11 +200,64 @@ const GRAPH = {
   particleSpeed: 0.004,      // particle travel speed
 };
 
+// ── CYTO — Cytoscape.js renderer knobs (tuned here, reload to apply) ──
+const CYTO = {
+  // Node size (px) per type — cytoscape sizes are pixels, not world units
+  nodeSize: {
+    TICKER: 46, FEDERAL_AWARD: 30, PRODUCT: 18, COMPANY: 20,
+    AWARD_INVENTORY: 22, SUBSIDIARY: 16, DEFAULT: 18,
+  },
+  // Colors reused from GRAPH (single source of truth)
+  nodeColor: GRAPH.nodeColor,
+  edgeColor: GRAPH.edgeColor,
+  // Edge width (px) per relationship type
+  edgeWidth: {
+    HAS_AWARD: 2, HAS_AWARD_INVENTORY: 1.5, COVERS: 1.5,
+    AWARDED_BY: 1.5, SUBSIDIARY_OF: 1.5, DEFAULT: 1,
+  },
+  // Labels — always visible + wrapped (unlike force-graph's hover-only)
+  labelSize: 11,
+  labelColor: '#e6edf3',
+  labelMaxWidth: 90,     // px before wrapping
+  // Layout — 'cose' is force-directed (closest to force-graph feel)
+  layout: {
+    name: 'cose',
+    animate: false,
+    nodeRepulsion: 1200,
+    idealEdgeLength: 90,
+    gravity: 0.25,
+    numIter: 1000,
+  },
+};
+
 const $ = (id) => document.getElementById(id);
 const API = {
   get: async (p) => { const r = await fetch(p); return r.ok ? r.json() : Promise.reject(new Error((await r.json().catch(()=>({}))).detail || ('HTTP ' + r.status))); },
   post: async (p, body) => { const r = await fetch(p, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body||{}) }); return r.ok ? r.json() : Promise.reject(new Error((await r.json().catch(()=>({}))).detail || ('HTTP ' + r.status))); },
 };
+
+// ── debug logging (AI/agent diagnostics) ──────────────────
+// Mirrors console output to the server's runtime/logs/debug.log so an agent
+// (or the user) can read what happened in the UI. Never throws.
+function log(level, source, message, stack) {
+  try {
+    const line = { level, source, message, stack: stack || '' };
+    if (level === 'error') console.error('[' + source + ']', message, stack || '');
+    else console.log('[' + source + ']', message);
+    fetch('/api/debug-log', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(line),
+    }).catch(() => {});
+  } catch (e) { /* never break the app on logging */ }
+}
+window.addEventListener('error', (evt) => {
+  log('error', 'window', evt.message || 'uncaught error', evt.error && evt.error.stack ? evt.error.stack : '');
+});
+window.addEventListener('unhandledrejection', (evt) => {
+  const r = evt.reason;
+  log('error', 'promise', r && r.message ? r.message : String(r), r && r.stack ? r.stack : '');
+});
 const EXAMPLES = [
   "MATCH (t:TICKER {ticker:'IONQ'})-[:HAS_AWARD]->(a:FEDERAL_AWARD) RETURN a.name, a.role, a.kind, a.amount, a.agency_toptier ORDER BY a.amount DESC",
   "MATCH (t:TICKER)-[:HAS_AWARD]->(a:FEDERAL_AWARD)-[:COVERS]->(p:PRODUCT) RETURN t.ticker, p.name, a.amount ORDER BY a.amount DESC LIMIT 25",
@@ -338,11 +396,13 @@ function cypherTable(keys, rows) {
 async function runCypher() {
   const q = $('cypherInput').value.trim();
   if (!q) return;
+  log('info', 'cypher', 'run: ' + q);
   try {
     const r = await API.post('/api/cypher', { query: q, limit: 200 });
     const n = (r.meta ? r.meta.count : r.rows.length);
+    log('info', 'cypher', 'ok: ' + n + ' row(s)');
     $('cypherOut').innerHTML = '<div class="hint">'+n+' row(s)</div>' + cypherTable(r.keys, r.rows);
-  } catch (e) { $('cypherOut').innerHTML = '<div class="err">'+esc(e.message)+'</div>'; }
+  } catch (e) { log('error', 'cypher', 'failed: ' + e.message); $('cypherOut').innerHTML = '<div class="err">'+esc(e.message)+'</div>'; }
 }
 $('btnCypher').onclick = runCypher;
 document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => { $('cypherInput').value = EXAMPLES[+b.dataset.ex]; runCypher(); });
@@ -386,13 +446,102 @@ function sizeGraph() {
 window.addEventListener('resize', sizeGraph);
 requestAnimationFrame(sizeGraph);
 
+// ── Cytoscape.js — toggleable second renderer ─────────────
+const cyEl = $('graphCy');
+let cy = null, cyData = null, cyStale = true;
+
+// Build (or rebuild) the Cytoscape instance from graph data.
+function buildCy(data) {
+  try {
+    const elements = [];
+    const nodes = data.nodes || [], links = data.links || [];
+    let eid = 0;
+    for (const n of nodes) elements.push({ data: { id: n.id, name: n.name, type: n.type } });
+    for (const l of links) elements.push({ data: { id: 'e' + (eid++), source: l.source, target: l.target, type: l.type } });
+
+    const style = [
+      {
+        selector: 'node',
+        style: {
+          'background-color': (el) => CYTO.nodeColor[el.data('type')] || CYTO.nodeColor.DEFAULT,
+          'width': (el) => CYTO.nodeSize[el.data('type')] || CYTO.nodeSize.DEFAULT,
+          'height': (el) => CYTO.nodeSize[el.data('type')] || CYTO.nodeSize.DEFAULT,
+          'label': 'data(name)',
+          'color': CYTO.labelColor,
+          'font-size': CYTO.labelSize,
+          'text-valign': 'bottom',
+          'text-halign': 'center',
+          'text-wrap': 'wrap',
+          'text-max-width': CYTO.labelMaxWidth,
+          'text-margin-y': 4,
+          'overlay-opacity': 0,
+        },
+      },
+      {
+        selector: 'edge',
+        style: {
+          'line-color': (el) => CYTO.edgeColor[el.data('type')] || CYTO.edgeColor.DEFAULT,
+          'width': (el) => CYTO.edgeWidth[el.data('type')] || CYTO.edgeWidth.DEFAULT,
+          'curve-style': 'bezier',
+          'target-arrow-shape': 'triangle',
+          'target-arrow-color': (el) => CYTO.edgeColor[el.data('type')] || CYTO.edgeColor.DEFAULT,
+          'opacity': 0.7,
+        },
+      },
+    ];
+
+    if (cy) { cy.destroy(); cy = null; }
+    cy = cytoscape({ container: cyEl, elements, style, layout: CYTO.layout });
+    cy.on('tap', 'node', (evt) => { selNode = evt.target; openViewer(evt.target.id()); });
+    cyStale = false;
+    log('info', 'cyto', 'built cytoscape: ' + nodes.length + ' nodes, ' + links.length + ' links, container ' + cyEl.clientWidth + 'x' + cyEl.clientHeight);
+  } catch (e) {
+    cyStale = true;
+    log('error', 'cyto', 'buildCy failed: ' + e.message, e.stack || '');
+  }
+}
+
+// Toggle between the force-graph and Cytoscape renderers.
+let renderer = 'force';
+const btnRender = $('btnRender');
+function setRenderer(r) {
+  renderer = r;
+  const forceOn = r === 'force';
+  $('graph').style.display = forceOn ? '' : 'none';
+  cyEl.style.display = forceOn ? 'none' : '';
+  btnRender.textContent = 'View: ' + (forceOn ? 'Force' : 'Cytoscape');
+  if (forceOn) {
+    sizeGraph();
+  } else {
+    // Wait a frame so the now-visible container has real dimensions before
+    // cytoscape reads them (a 0-size container renders blank).
+    requestAnimationFrame(() => {
+      try {
+        if (cyStale || !cy) buildCy(cyData || { nodes: [], links: [] });
+        if (cy) cy.resize();
+        log('info', 'cyto', 'switched to cytoscape view');
+      } catch (e) {
+        log('error', 'cyto', 'setRenderer(cyto) failed: ' + e.message, e.stack || '');
+      }
+    });
+  }
+}
+btnRender.onclick = () => setRenderer(renderer === 'force' ? 'cyto' : 'force');
+window.addEventListener('resize', () => { if (cy) cy.resize(); });
+
 async function loadGraph() {
   try {
     const data = await API.get('/api/graph');
+    // Deep-copy for cytoscape BEFORE force-graph mutates the object: force-graph
+    // replaces link source/target string ids with node object references in place,
+    // which cytoscape rejects. Keep a pristine copy for the cytoscape renderer.
+    cyData = JSON.parse(JSON.stringify(data));
+    cyStale = true;
+    log('info', 'graph', '/api/graph -> ' + (data.nodes||[]).length + ' nodes, ' + (data.links||[]).length + ' links');
     $('graphOverlay').textContent = data.nodes.length ? '' : 'No data yet - ingest tickers.';
     sizeGraph();
     Graph.graphData(data);
-  } catch (e) { $('graphOverlay').textContent = e.message; }
+  } catch (e) { log('error', 'graph', '/api/graph failed: ' + e.message); $('graphOverlay').textContent = e.message; }
 }
 
 // ── Viewer: metadata + the whole source chunk ─────────────
@@ -439,6 +588,7 @@ window.addEventListener('mousemove', (e) => {
 window.addEventListener('mouseup', () => { resizing = false; resizeH.classList.remove('active'); });
 
 // ── boot / auto-refresh ───────────────────────────────────
+log('info', 'boot', 'page loaded');
 openLogStream();
 refreshStatus();
 refreshCounts();

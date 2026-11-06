@@ -573,6 +573,54 @@ def restore_graph(payload: dict, dry_run: bool = False):
     return _run_read(work)
 
 
+# ── debug log (AI/agent diagnostics) ────────────────────────
+DEBUG_LOG = ROOT / "runtime" / "logs" / "debug.log"
+_debug_lock = threading.Lock()
+
+
+class DebugLogBody(BaseModel):
+    level: str = "info"
+    source: str = "ui"
+    message: str = ""
+    stack: str = ""
+
+
+@app.post("/api/debug-log")
+def debug_log_write(body: DebugLogBody):
+    """Append a client-side log line (console errors, renderer events) to runtime/logs/debug.log."""
+    try:
+        DEBUG_LOG.parent.mkdir(parents=True, exist_ok=True)
+        line = json.dumps(
+            {
+                "ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
+                "level": body.level,
+                "source": body.source,
+                "message": body.message,
+                "stack": body.stack,
+            },
+            ensure_ascii=False,
+        )
+        with _debug_lock:
+            with DEBUG_LOG.open("a", encoding="utf-8") as f:
+                f.write(line + "\n")
+        return {"ok": True}
+    except Exception as e:
+        return JSONResponse({"ok": False, "error": str(e)}, status_code=500)
+
+
+@app.get("/api/debug-log")
+def debug_log_read(tail: int = 200):
+    """Return the last N lines of the debug log (for agent debugging)."""
+    try:
+        if not DEBUG_LOG.exists():
+            return {"lines": []}
+        with DEBUG_LOG.open("r", encoding="utf-8") as f:
+            lines = f.readlines()
+        return {"lines": lines[-tail:]}
+    except Exception as e:
+        return JSONResponse({"ok": False, "error": str(e)}, status_code=500)
+
+
 # ── static UI ───────────────────────────────────────────────
 @app.get("/")
 def index():
