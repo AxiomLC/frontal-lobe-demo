@@ -21,3 +21,6 @@ TECH_README.md
 .zed/
 .DS_Store
 Thumbs.db
+
+# local handoff note (not for the public repo)
+HANDOFF*.md
